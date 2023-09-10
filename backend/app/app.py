@@ -1,24 +1,18 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
+import urllib.parse
 
 app = Flask(__name__)
+
+password = "my_password"
+encoded_password = urllib.parse.quote_plus(password)
 
 # Configuração do banco de dados
 app.config[
     "SQLALCHEMY_DATABASE_URI"
-] = "mysql://root:my_password@db/banco_de_dados_projeto"
+] = (f"mysql://root:{encoded_password}@mysql-container:3306/banco_de_dados_projeto")
 db = SQLAlchemy(app)
 
-# Defina seus modelos SQLAlchemy aqui
-try:
-    # Tenta inicializar o SQLAlchemy com as configurações
-    db = SQLAlchemy(app)
-    print(
-        "Configuração do SQLAlchemy bem-sucedida. Conexão ao banco de dados bem-sucedida."
-    )
-except Exception as e:
-    print(f"Erro ao configurar o SQLAlchemy: {e}")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='192.168.15.9', debug=True)
